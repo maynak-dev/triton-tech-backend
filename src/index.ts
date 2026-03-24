@@ -34,7 +34,7 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
-app.get("/api/contacts", async (_req, res) => {
+app.get("/api/contact", async (_req, res) => {
   const contacts = await prisma.contact.findMany({ orderBy: { createdAt: "desc" } });
   res.json(contacts);
 });
