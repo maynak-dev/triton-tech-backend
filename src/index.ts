@@ -4,17 +4,9 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 const app = express();
+const prisma = new PrismaClient(); 
 
-// Explicit PrismaClient with database URL from environment
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-});
-
-// Correct CORS configuration
+// ✅ Correct CORS configuration
 const allowedOrigins = ['https://triton-tech-frontend.vercel.app', 'http://localhost:5173'];
 app.use(cors({
   origin: (origin, callback) => {
@@ -50,7 +42,7 @@ app.post("/api/contact", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json({ success: false, errors: error.errors });
     } else {
-      console.error(error); // Log the actual error
+      console.error(error);
       res.status(500).json({ success: false, message: "Internal server error" });
     }
   }
