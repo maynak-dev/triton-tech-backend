@@ -10,38 +10,30 @@ app.use(cors());
 app.use(express.json());
 
 const contactSchema = z.object({
-  name: z.string().trim().min(1).max(100),
-  email: z.string().trim().email().max(255),
-  phone: z.string().trim().max(20).optional().default(""),
-  subject: z.string().trim().min(1).max(200),
-  message: z.string().trim().min(1).max(2000),
+  name: z.string().min(2),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  subject: z.string().min(2),
+  message: z.string().min(10),
 });
 
 app.post("/api/contact", async (req, res) => {
   try {
     const data = contactSchema.parse(req.body);
     const contact = await prisma.contact.create({ data });
-    res.status(201).json({ success: true, id: contact.id });
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      res.status(400).json({ success: false, errors: err.errors });
+    res.status(201).json({ success: true, contact });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ success: false, errors: error.errors });
     } else {
-      console.error(err);
       res.status(500).json({ success: false, message: "Internal server error" });
     }
   }
 });
 
 app.get("/api/contacts", async (_req, res) => {
-  try {
-    const contacts = await prisma.contact.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    res.json(contacts);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
+  const contacts = await prisma.contact.findMany({ orderBy: { createdAt: "desc" } });
+  res.json(contacts);
 });
 
 const PORT = process.env.PORT || 3001;
