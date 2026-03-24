@@ -12,10 +12,6 @@ Node.js + Express + Prisma + PostgreSQL backend for the contact form.
 
 2. Create a `.env` file from the example:
 
-   ```bash
-   cp .env.example .env
-   ```
-
 3. Update `DATABASE_URL` in `.env` with your PostgreSQL connection string.
 
 4. Run migrations:
@@ -34,7 +30,7 @@ Node.js + Express + Prisma + PostgreSQL backend for the contact form.
 In frontend project, create a `.env` file:
 
 ```
-VITE_API_URL=https://your-api.vercel.app
+VITE_API_URL=https://backend-api.vercel.app
 ```
 
 ## Endpoints
