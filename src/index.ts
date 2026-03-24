@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 const allowedOrigins = ['https://triton-tech-frontend.vercel.app', 'http://localhost:5173'];
 app.use(cors({
-  origin: 'https://triton-tech-frontend.vercel.app',
+  origin: 'https://triton-tech-frontend.vercel.app/api/contact',
   credentials: true,
 }));
 app.use(express.json());
