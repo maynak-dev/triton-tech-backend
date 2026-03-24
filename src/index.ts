@@ -6,6 +6,7 @@ import { z } from "zod";
 const app = express();
 const prisma = new PrismaClient();
 
+const allowedOrigins = ['https://triton-tech-frontend.vercel.app', 'http://localhost:5173'];
 app.use(cors({
   origin: 'https://triton-tech-frontend.vercel.app',
   credentials: true,
