@@ -3,6 +3,17 @@
     { "src": "src/index.ts", "use": "@vercel/node" }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "methods": ["OPTIONS"],
+      "headers": {
+        "Access-Control-Allow-Origin": "https://triton-tech-frontend.vercel.app",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Max-Age": "86400"
+      },
+      "status": 204
+    },
     { "src": "/api/(.*)", "dest": "src/index.ts" }
   ]
 }
