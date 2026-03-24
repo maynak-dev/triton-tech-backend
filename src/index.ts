@@ -4,11 +4,26 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 const app = express();
-const prisma = new PrismaClient();
 
+// Explicit PrismaClient with database URL from environment
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL,
+    },
+  },
+});
+
+// Correct CORS configuration
 const allowedOrigins = ['https://triton-tech-frontend.vercel.app', 'http://localhost:5173'];
 app.use(cors({
-  origin: 'https://triton-tech-frontend.vercel.app/api/contact',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
@@ -21,6 +36,11 @@ const contactSchema = z.object({
   message: z.string().min(10),
 });
 
+// Optional health check (useful for debugging)
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 app.post("/api/contact", async (req, res) => {
   try {
     const data = contactSchema.parse(req.body);
@@ -30,12 +50,13 @@ app.post("/api/contact", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json({ success: false, errors: error.errors });
     } else {
+      console.error(error); // Log the actual error
       res.status(500).json({ success: false, message: "Internal server error" });
     }
   }
 });
 
-app.get("/api/contact", async (_req, res) => {
+app.get("/api/contacts", async (_req, res) => {
   const contacts = await prisma.contact.findMany({ orderBy: { createdAt: "desc" } });
   res.json(contacts);
 });
