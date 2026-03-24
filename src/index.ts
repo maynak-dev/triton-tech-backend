@@ -4,13 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 const app = express();
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-});
+const prisma = new PrismaClient();
 
 // CORS configuration
 const allowedOrigins = ['https://triton-tech-frontend.vercel.app', 'http://localhost:5173'];
