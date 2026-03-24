@@ -6,7 +6,10 @@ import { z } from "zod";
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://triton-tech-frontend.vercel.app',
+  credentials: true,
+}));
 app.use(express.json());
 
 const contactSchema = z.object({
