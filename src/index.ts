@@ -4,9 +4,13 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 const app = express();
-const prisma = new PrismaClient(); 
 
-// ✅ Correct CORS configuration
+//  Correct way to pass database URL in Prisma 7
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.DATABASE_URL,
+});
+
+//  CORS configuration
 const allowedOrigins = ['https://triton-tech-frontend.vercel.app', 'http://localhost:5173'];
 app.use(cors({
   origin: (origin, callback) => {
@@ -28,7 +32,7 @@ const contactSchema = z.object({
   message: z.string().min(10),
 });
 
-// Optional health check (useful for debugging)
+// Health check endpoint (optional)
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
